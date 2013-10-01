@@ -20,9 +20,8 @@ def main():
 
     def conway_frames():
         while True:
-            step = grid.compute_step()
-            yield step
-            grid.apply_step(step)
+            grid.tick()
+            yield grid.last_step
 
     def process_step(step):
         for (x1, y1), value in step:

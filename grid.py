@@ -6,14 +6,14 @@ g = Grid(8,8)
 g.set_alive(0,0)
 g.set_alive(0,1)
 g.set_alive(1,0)
-step = g.compute_step()
-g.apply_step(step)
+g.tick()
 print g.is_alive(1,1)
 """
     def __init__(self, rows, cols):
         self._grid = [[False] * cols for r in xrange(rows)]
         self._rows = rows
         self._cols = cols
+        self._last_step = None
     
     @property
     def rows(self):
@@ -22,6 +22,10 @@ print g.is_alive(1,1)
     @property
     def cols(self):
         return self._cols
+
+    @property
+    def last_step(self):
+        return self._last_step
 
     def is_alive(self, row, col):
         return self._grid[row][col]
@@ -32,21 +36,15 @@ print g.is_alive(1,1)
     def set_dead(self, row, col):
         self._grid[row][col] = False
 
-    def compute_step(self):
-        retval = []
+    def tick(self):
+        step = []
         for index in self.iterindexes():
             current_value = self._grid[index[0]][index[1]]
             value = self._next_cell_state(*index)
             if value != current_value:
-                retval.append((index, value))
-        return retval
-
-    def apply_step(self, step):
-        for index, value in step:
-            if value == True:
-                self.set_alive(*index)
-            else:
-                self.set_dead(*index)
+                step.append((index, value))
+                self._grid[index[0]][index[1]] = value
+        self._last_step = step
 
     def _num_alive_neighbors(self, row, col):
         neighbor_indexes = [

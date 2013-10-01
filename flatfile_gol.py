@@ -72,8 +72,7 @@ def main():
     
     with open(filename, 'r') as f:
         grid = grid_from_str(f.read())
-    step = grid.compute_step()
-    grid.apply_step(step)
+    grid.tick()
     with open(filename, 'w') as f:
         f.write(str_from_grid(grid))
 
