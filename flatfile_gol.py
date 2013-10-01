@@ -16,6 +16,22 @@ from docopt import docopt
 from grid import Grid
 import random
 
+def grid_from_str(grid_string):
+    tmpgrid = grid_string.strip().split('\n')
+    # trim header and footer
+    tmpgrid = tmpgrid[1:-1]
+    # trim side borders
+    tmpgrid = [x.strip()[1:-1] for x in tmpgrid]
+    
+    grid = Grid(len(tmpgrid), len(tmpgrid[0]))
+    for row, col in grid.iterindexes():
+        if tmpgrid[row][col] == '*':
+            grid.set_alive(row, col)
+        else:
+            grid.set_dead(row, col)
+
+    return grid
+
 def str_from_grid(grid):
     headerfooter = '+' + '-' * grid.cols + '+'
     token = { True : '*', False : ' ' }
@@ -29,22 +45,6 @@ def str_from_grid(grid):
     board.insert(0, headerfooter)
     board.append(headerfooter)
     return '\n'.join(board)
-
-def grid_from_str(grid_string):
-    tmpgrid = grid_string.split('\n')
-    # trim header and footer
-    tmpgrid = tmpgrid[1:-1]
-    # trim side borders
-    tmpgrid = [x[1:-1] for x in tmpgrid]
-    
-    grid = Grid(len(tmpgrid), len(tmpgrid[0]))
-    for row, col in grid.iterindexes():
-        if tmpgrid[row][col] == '*':
-            grid.set_alive(row, col)
-        else:
-            grid.set_dead(row, col)
-
-    return grid
 
 def main():
     arguments = docopt(__doc__)
