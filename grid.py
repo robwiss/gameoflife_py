@@ -43,7 +43,8 @@ print g.is_alive(1,1)
             value = self._next_cell_state(*index)
             if value != current_value:
                 step.append((index, value))
-                self._grid[index[0]][index[1]] = value
+        for (row,col), value in step:
+            self._grid[row][col] = value
         self._last_step = step
 
     def _num_alive_neighbors(self, row, col):

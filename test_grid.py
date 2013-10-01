@@ -1,116 +1,323 @@
 import unittest
 from grid import Grid
+from flatfile_gol import grid_from_str, str_from_grid
 
-class TestNumAliveNeighbors(unittest.TestCase):
-    """Tests to verify that the _num_alive_neighbors method works properly
+def grids_equal(grid, other_grid):
+    if grid.rows != other_grid.rows or grid.cols != other_grid.cols:
+        return False
+    for index in grid.iterindexes():
+        if grid.is_alive(*index) != other_grid.is_alive(*index):
+            return False
+    return True
+
+class TestGameRules(unittest.TestCase):
+
+    def test_no_neighbors(self):
+        start = """
++----+
+|*   |
+|    |
+|    |
+|    |
++----+
+"""
+        finish = """
++----+
+|    |
+|    |
+|    |
+|    |
++----+
+"""
+        start_grid = grid_from_str(start)
+        start_grid.tick()
+        finish_grid = grid_from_str(finish)
+        self.assertTrue(grids_equal(start_grid, finish_grid))
     
-Each corner is tested, then an area in the middle of the board is tested.
-    """
+    def test_one_neighbor(self):
+        start = """
++----+
+|*   |
+|*   |
+|    |
+|    |
++----+
+"""
+        finish = """
++----+
+|    |
+|    |
+|    |
+|    |
++----+
+"""
+        start_grid = grid_from_str(start)
+        start_grid.tick()
+        finish_grid = grid_from_str(finish)
+        self.assertTrue(grids_equal(start_grid, finish_grid))
+    
+    def test_two_neighbors(self):
+        start = """
++----+
+|**  |
+|*   |
+|    |
+|    |
++----+
+"""
+        finish = """
++----+
+|**  |
+|**  |
+|    |
+|    |
++----+
+"""
+        start_grid = grid_from_str(start)
+        start_grid.tick()
+        finish_grid = grid_from_str(finish)
+        self.assertTrue(grids_equal(start_grid, finish_grid))
+
+    def test_three_neighbors(self):
+        start = """
++----+
+|**  |
+|**  |
+|    |
+|    |
++----+
+"""
+        finish = """
++----+
+|**  |
+|**  |
+|    |
+|    |
++----+
+"""
+        start_grid = grid_from_str(start)
+        start_grid.tick()
+        finish_grid = grid_from_str(finish)
+        self.assertTrue(grids_equal(start_grid, finish_grid))
+
+    def test_four_neighbors(self):
+        start = """
++----+
+|*** |
+|**  |
+|    |
+|    |
++----+
+"""
+        finish = """
++----+
+|* * |
+|* * |
+|    |
+|    |
++----+
+"""
+        start_grid = grid_from_str(start)
+        start_grid.tick()
+        finish_grid = grid_from_str(finish)
+        self.assertTrue(grids_equal(start_grid, finish_grid))
+    
+    def test_five_neighbors(self):
+        start = """
++----+
+|*** |
+|*** |
+|    |
+|    |
++----+
+"""
+        finish = """
++----+
+|* * |
+|* * |
+| *  |
+|    |
++----+
+"""
+        start_grid = grid_from_str(start)
+        start_grid.tick()
+        finish_grid = grid_from_str(finish)
+        self.assertTrue(grids_equal(start_grid, finish_grid))
+
+    def test_six_neighbors(self):
+        start = """
++----+
+|*** |
+|*** |
+|*   |
+|    |
++----+
+"""
+        finish = """
++----+
+|* * |
+|  * |
+|*   |
+|    |
++----+
+"""
+        start_grid = grid_from_str(start)
+        start_grid.tick()
+        finish_grid = grid_from_str(finish)
+        self.assertTrue(grids_equal(start_grid, finish_grid))
+    
+    def test_seven_neighbors(self):
+        start = """
++----+
+|*** |
+|*** |
+|*   |
+|    |
++----+
+"""
+        finish = """
++----+
+|* * |
+|  * |
+|*   |
+|    |
++----+
+"""
+        start_grid = grid_from_str(start)
+        start_grid.tick()
+        finish_grid = grid_from_str(finish)
+        self.assertTrue(grids_equal(start_grid, finish_grid))
+
+    def test_seven_neighbors(self):
+        start = """
++----+
+|*** |
+|*** |
+|**  |
+|    |
++----+
+"""
+        finish = """
++----+
+|* * |
+|    |
+|* * |
+|    |
++----+
+"""
+        start_grid = grid_from_str(start)
+        start_grid.tick()
+        finish_grid = grid_from_str(finish)
+        self.assertTrue(grids_equal(start_grid, finish_grid))
+
+    def test_eight_neighbors(self):
+        start = """
++----+
+|*** |
+|*** |
+|*** |
+|    |
++----+
+"""
+        finish = """
++----+
+|* * |
+|   *|
+|* * |
+| *  |
++----+
+"""
+        start_grid = grid_from_str(start)
+        start_grid.tick()
+        finish_grid = grid_from_str(finish)
+        self.assertTrue(grids_equal(start_grid, finish_grid))
+
+class TestEdges(unittest.TestCase):
     
     def test_topleft(self):
-        g = Grid(4,4)
-        self.assertEqual(g._num_alive_neighbors(0,0), 0)
-        g.set_alive(0,1)
-        self.assertEqual(g._num_alive_neighbors(0,0), 1)
-        g.set_alive(1,0)
-        self.assertEqual(g._num_alive_neighbors(0,0), 2)
-        g.set_alive(1,1)
-        self.assertEqual(g._num_alive_neighbors(0,0), 3)
-    
+        start = """
++----+
+|**  |
+|*   |
+|    |
+|    |
++----+
+"""
+        finish = """
++----+
+|**  |
+|**  |
+|    |
+|    |
++----+
+"""
+        start_grid = grid_from_str(start)
+        start_grid.tick()
+        finish_grid = grid_from_str(finish)
+        self.assertTrue(grids_equal(start_grid, finish_grid))
+
     def test_topright(self):
-        g = Grid(4,4)
-        self.assertEqual(g._num_alive_neighbors(0,3), 0)
-        g.set_alive(0,2)
-        self.assertEqual(g._num_alive_neighbors(0,3), 1)
-        g.set_alive(1,2)
-        self.assertEqual(g._num_alive_neighbors(0,3), 2)
-        g.set_alive(1,3)
-        self.assertEqual(g._num_alive_neighbors(0,3), 3)
+        start = """
++----+
+|  **|
+|   *|
+|    |
+|    |
++----+
+"""
+        finish = """
++----+
+|  **|
+|  **|
+|    |
+|    |
++----+
+"""
+        start_grid = grid_from_str(start)
+        start_grid.tick()
+        finish_grid = grid_from_str(finish)
+        self.assertTrue(grids_equal(start_grid, finish_grid))
 
     def test_bottomleft(self):
-        g = Grid(4,4)
-        self.assertEqual(g._num_alive_neighbors(3,0), 0)
-        g.set_alive(2,0)
-        self.assertEqual(g._num_alive_neighbors(3,0), 1)
-        g.set_alive(2,1)
-        self.assertEqual(g._num_alive_neighbors(3,0), 2)
-        g.set_alive(3,1)
-        self.assertEqual(g._num_alive_neighbors(3,0), 3)
+        start = """
++----+
+|    |
+|    |
+|*   |
+|**  |
++----+
+"""
+        finish = """
++----+
+|    |
+|    |
+|**  |
+|**  |
++----+
+"""
+        start_grid = grid_from_str(start)
+        start_grid.tick()
+        finish_grid = grid_from_str(finish)
+        self.assertTrue(grids_equal(start_grid, finish_grid))
 
     def test_bottomright(self):
-        g = Grid(4,4)
-        self.assertEqual(g._num_alive_neighbors(3,3), 0)
-        g.set_alive(3,2)
-        self.assertEqual(g._num_alive_neighbors(3,3), 1)
-        g.set_alive(2,2)
-        self.assertEqual(g._num_alive_neighbors(3,3), 2)
-        g.set_alive(2,3)
-        self.assertEqual(g._num_alive_neighbors(3,3), 3)
-
-    def test_not_edge(self):
-        g = Grid(4,4)
-        self.assertEqual(g._num_alive_neighbors(1,1), 0)
-        g.set_alive(0,0)
-        self.assertEqual(g._num_alive_neighbors(1,1), 1)
-        g.set_alive(0,1)
-        self.assertEqual(g._num_alive_neighbors(1,1), 2)
-        g.set_alive(0,2)
-        self.assertEqual(g._num_alive_neighbors(1,1), 3)
-        g.set_alive(1,0)
-        self.assertEqual(g._num_alive_neighbors(1,1), 4)
-        g.set_alive(1,2)
-        self.assertEqual(g._num_alive_neighbors(1,1), 5)
-        g.set_alive(2,0)
-        self.assertEqual(g._num_alive_neighbors(1,1), 6)
-        g.set_alive(2,1)
-        self.assertEqual(g._num_alive_neighbors(1,1), 7)
-        g.set_alive(2,2)
-        self.assertEqual(g._num_alive_neighbors(1,1), 8)
-
-class TestNextCellState(unittest.TestCase):
-    """Tests to verify that the rules for death and reproduction work"""
-
-    def test_alive_with_less_than_two(self):
-        """Any live cell with fewer than two live neighbours dies, as if caused by under-population."""
-        g = Grid(4,4)
-        g.set_alive(0,0)
-        self.assertEqual(g._next_cell_state(0,0), False)
-        g.set_alive(0,1)
-        self.assertEqual(g._next_cell_state(0,0), False)
-    
-    def test_alive_with_two_or_three(self):
-        """Any live cell with two or three live neighbours lives on to the next generation."""
-        g = Grid(4,4)
-        g.set_alive(0,0)
-        g.set_alive(0,1)
-        g.set_alive(1,1)
-        self.assertEqual(g._next_cell_state(0,0), True)
-        g.set_alive(1,0)
-        self.assertEqual(g._next_cell_state(0,0), True)
-
-    def test_alive_with_more_than_three(self):
-        """Any live cell with more than three live neighbours dies, as if by overcrowding."""
-        g = Grid(4,4)
-        g.set_alive(1,1)
-        g.set_alive(0,0)
-        g.set_alive(0,1)
-        g.set_alive(0,2)
-        g.set_alive(1,0)
-        self.assertEqual(g._next_cell_state(1,1), False)
-        g.set_alive(1,2)
-        self.assertEqual(g._next_cell_state(1,1), False)
-        g.set_alive(2,0)
-        self.assertEqual(g._next_cell_state(1,1), False)
-        g.set_alive(2,1)
-        self.assertEqual(g._next_cell_state(1,1), False)
-        g.set_alive(2,2)
-        self.assertEqual(g._next_cell_state(1,1), False)
-
-    def test_dead_with_three(self):
-        """Any dead cell with exactly three live neighbours becomes a live cell, as if by reproduction."""
-        g = Grid(4,4)
-        g.set_alive(0,0)
-        g.set_alive(0,1)
-        g.set_alive(1,0)
-        self.assertEqual(g._next_cell_state(1,1), True)
-
+        start = """
++----+
+|    |
+|    |
+|   *|
+|  **|
++----+
+"""
+        finish = """
++----+
+|    |
+|    |
+|  **|
+|  **|
++----+
+"""
+        start_grid = grid_from_str(start)
+        start_grid.tick()
+        finish_grid = grid_from_str(finish)
+        self.assertTrue(grids_equal(start_grid, finish_grid))
