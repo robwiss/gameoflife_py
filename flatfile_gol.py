@@ -13,8 +13,7 @@ Options:
 """
 
 from docopt import docopt
-from grid import Grid
-import random
+import purepy_engine as engine
 
 def grid_from_str(grid_string):
     tmpgrid = grid_string.strip().split('\n')
@@ -23,12 +22,13 @@ def grid_from_str(grid_string):
     # trim side borders
     tmpgrid = [x.strip()[1:-1] for x in tmpgrid]
     
-    grid = Grid(len(tmpgrid), len(tmpgrid[0]))
-    for row, col in grid.iterindexes():
+    grid = engine.grid.Grid(len(tmpgrid), len(tmpgrid[0]))
+    for coord in grid.itercoords():
+        row, col = coord
         if tmpgrid[row][col] == '*':
-            grid.set_alive(row, col)
+            grid[coord].live()
         else:
-            grid.set_dead(row, col)
+            grid[coord].die()
 
     return grid
 
@@ -37,7 +37,7 @@ def str_from_grid(grid):
     token = { True : '*', False : ' ' }
     board = [
         '|' + ''.join([
-            token[grid.is_alive(row,col)]
+            token[grid[(row,col)].is_alive()]
             for col in xrange(grid.cols)
         ]) + '|'
         for row in xrange(grid.rows)
@@ -60,19 +60,16 @@ def main():
         dim = dimensions.split('x')
         rows = int(dim[0])
         cols = int(dim[1])
-        grid = Grid(rows, cols)
+        grid = engine.grid.Grid(rows, cols)
         if rand:
-            for index in grid.iterindexes():
-                r = random.randint(0, 1)
-                if r == 1:
-                    grid.set_alive(*index)
+            engine.randomize(grid)
         with open(filename, 'w') as f:
             f.write(str_from_grid(grid))
         return
     
     with open(filename, 'r') as f:
         grid = grid_from_str(f.read())
-    grid.tick()
+    engine.tick(grid)
     with open(filename, 'w') as f:
         f.write(str_from_grid(grid))
 

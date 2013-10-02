@@ -1,12 +1,12 @@
 import unittest
-from grid import Grid
 from flatfile_gol import grid_from_str, str_from_grid
+import purepy_engine as engine
 
 def grids_equal(grid, other_grid):
     if grid.rows != other_grid.rows or grid.cols != other_grid.cols:
         return False
-    for index in grid.iterindexes():
-        if grid.is_alive(*index) != other_grid.is_alive(*index):
+    for coord in grid.itercoords():
+        if grid[coord].is_alive() != other_grid[coord].is_alive():
             return False
     return True
 
@@ -30,7 +30,7 @@ class TestGameRules(unittest.TestCase):
 +----+
 """
         start_grid = grid_from_str(start)
-        start_grid.tick()
+        engine.tick(start_grid)
         finish_grid = grid_from_str(finish)
         self.assertTrue(grids_equal(start_grid, finish_grid))
     
@@ -52,7 +52,7 @@ class TestGameRules(unittest.TestCase):
 +----+
 """
         start_grid = grid_from_str(start)
-        start_grid.tick()
+        engine.tick(start_grid)
         finish_grid = grid_from_str(finish)
         self.assertTrue(grids_equal(start_grid, finish_grid))
     
@@ -74,7 +74,7 @@ class TestGameRules(unittest.TestCase):
 +----+
 """
         start_grid = grid_from_str(start)
-        start_grid.tick()
+        engine.tick(start_grid)
         finish_grid = grid_from_str(finish)
         self.assertTrue(grids_equal(start_grid, finish_grid))
 
@@ -96,7 +96,7 @@ class TestGameRules(unittest.TestCase):
 +----+
 """
         start_grid = grid_from_str(start)
-        start_grid.tick()
+        engine.tick(start_grid)
         finish_grid = grid_from_str(finish)
         self.assertTrue(grids_equal(start_grid, finish_grid))
 
@@ -118,7 +118,7 @@ class TestGameRules(unittest.TestCase):
 +----+
 """
         start_grid = grid_from_str(start)
-        start_grid.tick()
+        engine.tick(start_grid)
         finish_grid = grid_from_str(finish)
         self.assertTrue(grids_equal(start_grid, finish_grid))
     
@@ -140,7 +140,7 @@ class TestGameRules(unittest.TestCase):
 +----+
 """
         start_grid = grid_from_str(start)
-        start_grid.tick()
+        engine.tick(start_grid)
         finish_grid = grid_from_str(finish)
         self.assertTrue(grids_equal(start_grid, finish_grid))
 
@@ -162,7 +162,7 @@ class TestGameRules(unittest.TestCase):
 +----+
 """
         start_grid = grid_from_str(start)
-        start_grid.tick()
+        engine.tick(start_grid)
         finish_grid = grid_from_str(finish)
         self.assertTrue(grids_equal(start_grid, finish_grid))
     
@@ -184,7 +184,7 @@ class TestGameRules(unittest.TestCase):
 +----+
 """
         start_grid = grid_from_str(start)
-        start_grid.tick()
+        engine.tick(start_grid)
         finish_grid = grid_from_str(finish)
         self.assertTrue(grids_equal(start_grid, finish_grid))
 
@@ -206,7 +206,7 @@ class TestGameRules(unittest.TestCase):
 +----+
 """
         start_grid = grid_from_str(start)
-        start_grid.tick()
+        engine.tick(start_grid)
         finish_grid = grid_from_str(finish)
         self.assertTrue(grids_equal(start_grid, finish_grid))
 
@@ -228,7 +228,7 @@ class TestGameRules(unittest.TestCase):
 +----+
 """
         start_grid = grid_from_str(start)
-        start_grid.tick()
+        engine.tick(start_grid)
         finish_grid = grid_from_str(finish)
         self.assertTrue(grids_equal(start_grid, finish_grid))
 
@@ -252,7 +252,7 @@ class TestEdges(unittest.TestCase):
 +----+
 """
         start_grid = grid_from_str(start)
-        start_grid.tick()
+        engine.tick(start_grid)
         finish_grid = grid_from_str(finish)
         self.assertTrue(grids_equal(start_grid, finish_grid))
 
@@ -274,7 +274,7 @@ class TestEdges(unittest.TestCase):
 +----+
 """
         start_grid = grid_from_str(start)
-        start_grid.tick()
+        engine.tick(start_grid)
         finish_grid = grid_from_str(finish)
         self.assertTrue(grids_equal(start_grid, finish_grid))
 
@@ -296,7 +296,7 @@ class TestEdges(unittest.TestCase):
 +----+
 """
         start_grid = grid_from_str(start)
-        start_grid.tick()
+        engine.tick(start_grid)
         finish_grid = grid_from_str(finish)
         self.assertTrue(grids_equal(start_grid, finish_grid))
 
@@ -318,6 +318,6 @@ class TestEdges(unittest.TestCase):
 +----+
 """
         start_grid = grid_from_str(start)
-        start_grid.tick()
+        engine.tick(start_grid)
         finish_grid = grid_from_str(finish)
         self.assertTrue(grids_equal(start_grid, finish_grid))
