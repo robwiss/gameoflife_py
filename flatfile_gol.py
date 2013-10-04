@@ -13,34 +13,36 @@ Options:
 """
 
 from docopt import docopt
-import purepy_engine as engine
+import engine
 
-def grid_from_str(grid_string):
-    tmpgrid = grid_string.strip().split('\n')
+def cells_from_str(cells_string):
+    tmpcells = cells_string.strip().split('\n')
     # trim header and footer
-    tmpgrid = tmpgrid[1:-1]
+    tmpcells = tmpcells[1:-1]
     # trim side borders
-    tmpgrid = [x.strip()[1:-1] for x in tmpgrid]
+    tmpcells = [x.strip()[1:-1] for x in tmpcells]
+
+    dimensions = (len(tmpcells), len(tmpcells[0]))
     
-    grid = engine.grid.Grid(len(tmpgrid), len(tmpgrid[0]))
-    for coord in grid.itercoords():
-        row, col = coord
-        if tmpgrid[row][col] == '*':
-            grid[coord].live()
-        else:
-            grid[coord].die()
+    cells = engine.Cells({
+        (row,col)
+        for row, line in enumerate(tmpcells)
+        for col, value in enumerate(line)
+        if value == '*'
+    }, dimensions)
 
-    return grid
+    return cells
 
-def str_from_grid(grid):
-    headerfooter = '+' + '-' * grid.cols + '+'
+def str_from_cells(cells):
+    rows, cols = cells.dimensions
+    headerfooter = '+' + '-' * cols + '+'
     token = { True : '*', False : ' ' }
     board = [
         '|' + ''.join([
-            token[grid[(row,col)].is_alive()]
-            for col in xrange(grid.cols)
+            token[(row,col) in cells]
+            for col in xrange(cols)
         ]) + '|'
-        for row in xrange(grid.rows)
+        for row in xrange(rows)
     ]
     board.insert(0, headerfooter)
     board.append(headerfooter)
@@ -57,21 +59,20 @@ def main():
     if rand:
         dimensions = arguments['--rand']
     if dimensions is not None:
-        dim = dimensions.split('x')
-        rows = int(dim[0])
-        cols = int(dim[1])
-        grid = engine.grid.Grid(rows, cols)
+        dimensions = [int(x) for x in dimensions.split('x')]
         if rand:
-            engine.randomize(grid)
+            cells = engine.randomized_cells(dimensions)
+        else:
+            cells = Cells(dimensions=dimensions)
         with open(filename, 'w') as f:
-            f.write(str_from_grid(grid))
+            f.write(str_from_cells(cells))
         return
     
     with open(filename, 'r') as f:
-        grid = grid_from_str(f.read())
-    engine.tick(grid)
+        cells = cells_from_str(f.read())
+    engine.tick(cells)
     with open(filename, 'w') as f:
-        f.write(str_from_grid(grid))
+        f.write(str_from_cells(cells))
 
 if __name__ == '__main__':
     main()
