@@ -70,7 +70,10 @@ def tick(cells):
         if coord not in cells and count == 3:
             row, col = coord
             cells.add(coord)
-            cells.set_color(coord, parent_colors[coord].most_common(1)[0][0])
+            highest_freq = parent_colors[coord].most_common(1)[0][1]
+            most_common = [x for x in parent_colors[coord].most_common() if x[1] == highest_freq]
+            selected = random.randint(0, len(most_common) - 1)
+            cells.set_color(coord, parent_colors[coord].most_common()[selected][0])
         elif coord in cells and count not in [3, 4]:
             cells.remove(coord)
 
