@@ -16,7 +16,7 @@ def main():
     ]
 
     cells = engine.randomized_cells((x,y), colors)
-    white, black = (255, 255, 255), (0, 0, 0)
+    gray10 = (0x1a, 0x1a, 0x1a)
 
     def process_living(cells):
         for (x1, y1) in cells:
@@ -29,7 +29,7 @@ def main():
     # game loop
     while True:
         pygame.display.flip()
-        pygame.display.get_surface().fill(black)
+        pygame.display.get_surface().fill(gray10)
         process_living(cells)
         engine.tick(cells)
  
